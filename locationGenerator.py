@@ -12,16 +12,18 @@ class LocationGenerator:
         self.thickness = 0.05
         self.matrixSize = 2.5
 
-        self.ppi = 800
+        self.ppi = 120
 
         self.thicknessPPX = int(self.thickness * self.ppi)
         self.heightPPX = int(self.height * self.ppi)
         self.widthPPX = int(self.width * self.ppi)
         self.matrixPPX = int(self.matrixSize * self.ppi)
 
-        self.pageWidthPPX = int(8.5 * self.ppi)
-        self.pageHeightPPX = int(11 * self.ppi)
+        self.quarter = int(0.05 * self.ppi)
 
+        self.pageWidthPPX = int((3 * self.quarter) + (2 * self.widthPPX))
+        self.pageHeightPPX = int((4 * self.quarter) + (3 * self.heightPPX))
+        
     # Return PIL object
     def generateLocation(self, message):
         if message == "":
@@ -73,63 +75,42 @@ class LocationGenerator:
         pdfPages = []
 
         # X (left/right), Y(up/down) Coords
-        TLCoord = (int((1/3) * self.ppi), int(.32 * self.ppi))
-        TRCoord = (int(TLCoord[0]), int(TLCoord[1] * 2 + self.widthPPX))
+        TLCoord = (self.quarter, self.quarter)
+        TRCoord = (2 * self.quarter + self.widthPPX, self.quarter)
 
-        MLCoord = (int(TLCoord[0] * 2 + self.heightPPX), int(TLCoord[1]))
-        MRCoord = (int(MLCoord[0]), int(TLCoord[1] * 2 + self.widthPPX))
+        MLCoord = (self.quarter, 2 * self.quarter + self.heightPPX)
+        MRCoord = (2 * self.quarter + self.widthPPX, 2 * self.quarter + self.heightPPX)
 
-        BLCoord = (int(TLCoord[0] * 3 + self.heightPPX * 2), int(TLCoord[1]))
-        BRCoord = (int(BLCoord[0]), int(TLCoord[1] * 2 + self.widthPPX))
+        BLCoord = (self.quarter, 3 * self.quarter + 2 * self.heightPPX)
+        BRCoord = (2 * self.quarter + self.widthPPX, 3 * self.quarter + 2 * self.heightPPX)
 
         canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
 
-        for index, label in enumerate(labels):
-            index = index % 6
+        for tmpIndex, label in enumerate(labels):
+            index = tmpIndex % 6
 
             if index == 0:
-                canvas.paste(self.generateLocation(label), TLCoord[::-1])
+                canvas.paste(self.generateLocation(label), TLCoord)
 
             elif index == 1:
-                canvas.paste(self.generateLocation(label), TRCoord[::-1])
+                canvas.paste(self.generateLocation(label), TRCoord)
 
             elif index == 2:
-                canvas.paste(self.generateLocation(label), MLCoord[::-1])
+                canvas.paste(self.generateLocation(label), MLCoord)
 
             elif index == 3:
-                canvas.paste(self.generateLocation(label), MRCoord[::-1])
+                canvas.paste(self.generateLocation(label), MRCoord)
 
             elif index == 4:
-                canvas.paste(self.generateLocation(label), BLCoord[::-1])
+                canvas.paste(self.generateLocation(label), BLCoord)
 
             elif index == 5:
-                canvas.paste(self.generateLocation(label), TLCoord[::-1])
+                canvas.paste(self.generateLocation(label), BRCoord)
                 pdfPages.append(canvas)
                 canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
 
-            tmp = self.generateLocation(label)
-            pdfPages.append(tmp)
+        pdfPages.append(canvas)
+        canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
+            
 
         pdfPages[0].save("out.pdf", save_all=True, append_images=pdfPages[1:])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
