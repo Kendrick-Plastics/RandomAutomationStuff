@@ -20,9 +20,10 @@ class LocationGenerator:
         self.matrixPPX = int(self.matrixSize * self.ppi)
 
         self.quarter = int(0.05 * self.ppi)
+        self.margin = int(.5 * self.ppi)
 
-        self.pageWidthPPX = int((3 * self.quarter) + (2 * self.widthPPX))
-        self.pageHeightPPX = int((4 * self.quarter) + (3 * self.heightPPX))
+        self.pageWidthPPX = int((3 * self.quarter) + (2 * self.widthPPX)) + (2 * self.margin)
+        self.pageHeightPPX = int((4 * self.quarter) + (3 * self.heightPPX)) + (2 * self.margin)
         
     # Return PIL object
     def generateLocation(self, message):
@@ -48,7 +49,7 @@ class LocationGenerator:
         barX = (self.widthPPX - self.matrixPPX) // 2
         barY = int(0.0625 * self.ppi)
 
-        canvas.paste(whiteBG, (barX, barY))
+        canvas.paste(whiteBG, (barX, barY + int(.625 * self.ppi)))
 
         font = ImageFont.truetype("./arial.ttf", int(0.625 * self.ppi))
 
@@ -66,7 +67,7 @@ class LocationGenerator:
         fontY = int((2.0625 * self.ppi) + (((1.1875 * self.ppi) - (ascent - offsetY)) / 2))
 
         # textWidth, textHeight = draw.textlength(message, font=font)
-        draw.text((fontX, fontY), message, font=font, fill="black")
+        draw.text((fontX, fontY - self.matrixPPX), message, font=font, fill="black")
 
         return canvas
 
@@ -75,14 +76,14 @@ class LocationGenerator:
         pdfPages = []
 
         # X (left/right), Y(up/down) Coords
-        TLCoord = (self.quarter, self.quarter)
-        TRCoord = (2 * self.quarter + self.widthPPX, self.quarter)
+        TLCoord = (self.margin + self.quarter, self.margin + self.quarter)
+        TRCoord = (self.margin + 2 * self.quarter + self.widthPPX, self.margin + self.quarter)
 
-        MLCoord = (self.quarter, 2 * self.quarter + self.heightPPX)
-        MRCoord = (2 * self.quarter + self.widthPPX, 2 * self.quarter + self.heightPPX)
+        MLCoord = (self.margin + self.quarter,self.margin +  2 * self.quarter + self.heightPPX)
+        MRCoord = (self.margin + 2 * self.quarter + self.widthPPX,self.margin +  2 * self.quarter + self.heightPPX)
 
-        BLCoord = (self.quarter, 3 * self.quarter + 2 * self.heightPPX)
-        BRCoord = (2 * self.quarter + self.widthPPX, 3 * self.quarter + 2 * self.heightPPX)
+        BLCoord = (self.margin + self.quarter,self.margin +  3 * self.quarter + 2 * self.heightPPX)
+        BRCoord = (self.margin + 2 * self.quarter + self.widthPPX,self.margin +  3 * self.quarter + 2 * self.heightPPX)
 
         canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
 
