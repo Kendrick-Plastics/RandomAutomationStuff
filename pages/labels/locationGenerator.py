@@ -9,7 +9,7 @@ class LocationGenerator:
         # Location Label Dimensions (inches)
         self.height = 3.25
         self.width = 3.75
-        self.thickness = 0.05
+        self.thickness = 0.02
         self.matrixSize = 2.5
 
         self.ppi = 120
@@ -21,7 +21,7 @@ class LocationGenerator:
 
         # self.quarter = int(0.0 * self.ppi)
         self.quarter = -int(self.thicknessPPX / 2)
-        self.margin = int(.25 * self.ppi)
+        self.margin = int(0 * self.ppi)
 
         self.pageWidthPPX = int((3 * self.quarter) + (2 * self.widthPPX)) + (2 * self.margin)
         self.pageHeightPPX = int((4 * self.quarter) + (3 * self.heightPPX)) + (2 * self.margin)
@@ -111,7 +111,9 @@ class LocationGenerator:
                 pdfPages.append(canvas)
                 canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
 
-        pdfPages.append(canvas)
+        if (len(labels) % 6 != 0):
+            pdfPages.append(canvas)
+
         canvas = Image.new("RGBA", (self.pageWidthPPX, self.pageHeightPPX), "white")
             
         pdfPages[0].save("Labels.pdf", save_all=True, append_images=pdfPages[1:])
