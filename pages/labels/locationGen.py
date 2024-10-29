@@ -24,7 +24,7 @@ async def fileUpload(file: events.UploadEventArguments):
             completed = asyncio.Event()
             asyncio.create_task(genPDF(labels, completed))
 
-            spinner = ui.spinner()
+            spinner = ui.spinner().props("size=50")
             
             spinner.visible = True
 
@@ -34,5 +34,5 @@ async def fileUpload(file: events.UploadEventArguments):
             spinner.visible = False
 
 def locationLabel(ui):
-    ui.label("Upload an CSV file")
+    ui.label("Upload a CSV file")
     ui.upload(on_upload=fileUpload).props("accept=.csv")
