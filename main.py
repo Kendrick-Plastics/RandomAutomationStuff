@@ -14,7 +14,7 @@ with ui.tab_panels(tabs, value="Home").classes("w-full"):
         ui.label("If anything doesn't work, don't contact IT")
 
     # Location Label Generator
-    with ui.tab_panel("Location"):
+    with ui.tab_panel("Location") as locationDiv:
         locationLabel(ui)
 
 ui.run()

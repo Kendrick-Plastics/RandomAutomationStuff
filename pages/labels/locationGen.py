@@ -3,6 +3,13 @@ import pandas as pd
 from io import StringIO
 from .locationGenerator import LocationGenerator
 import asyncio
+import os
+
+async def genPDF(labels, completed):
+    labelGenerator = LocationGenerator()
+   
+    await asyncio.to_thread(labelGenerator.generatePDF, labels)
+    completed.set()
 
 async def fileUpload(file: events.UploadEventArguments):
     if file is not None:
@@ -14,11 +21,18 @@ async def fileUpload(file: events.UploadEventArguments):
             for index, row in df.iterrows():
                 labels.append(row.iloc[0])
 
-            labelGenerator = LocationGenerator()
-            labelGenerator.generatePDF(labels)
+            completed = asyncio.Event()
+            asyncio.create_task(genPDF(labels, completed))
 
+            spinner = ui.spinner()
+            
+            spinner.visible = True
+
+            await completed.wait()
+            ui.download("Labels.pdf", "Labels.pdf")
+
+            spinner.visible = False
 
 def locationLabel(ui):
     ui.label("Upload an CSV file")
-    ui.download("Labels.pdf", "Labels.pdf")
     ui.upload(on_upload=fileUpload).props("accept=.csv")

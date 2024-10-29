@@ -19,8 +19,9 @@ class LocationGenerator:
         self.widthPPX = int(self.width * self.ppi)
         self.matrixPPX = int(self.matrixSize * self.ppi)
 
-        self.quarter = int(0.05 * self.ppi)
-        self.margin = int(.5 * self.ppi)
+        # self.quarter = int(0.0 * self.ppi)
+        self.quarter = -int(self.thicknessPPX / 2)
+        self.margin = int(.25 * self.ppi)
 
         self.pageWidthPPX = int((3 * self.quarter) + (2 * self.widthPPX)) + (2 * self.margin)
         self.pageHeightPPX = int((4 * self.quarter) + (3 * self.heightPPX)) + (2 * self.margin)
