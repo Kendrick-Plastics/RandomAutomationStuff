@@ -17,4 +17,4 @@ with ui.tab_panels(tabs, value="Home").classes("w-full"):
     with ui.tab_panel("Location") as locationDiv:
         locationLabel(ui)
 
-ui.run()
+ui.run(port=6969)
