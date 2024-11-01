@@ -4,6 +4,7 @@ import asyncio
 
 @ui.page('/')
 def home():
+    ui.page_title("Utilities")
     with ui.header().classes(replace="row items-center bg-black") as header:
         with ui.tabs() as tabs:
             ui.tab("Home")
