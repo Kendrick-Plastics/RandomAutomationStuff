@@ -9,7 +9,7 @@ class LocationGenerator:
         # Location Label Dimensions (inches)
         self.height = 3.25
         self.width = 3.75
-        self.thickness = 0.02
+        self.thickness = 0
         self.matrixSize = 2.5
 
         self.ppi = 120
